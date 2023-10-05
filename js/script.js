@@ -81,16 +81,36 @@ let header = $(".header");
     let cards = $(".review__card");
     let paggination = $(".paggination");
     let paggitems = "";
+    let pagination_width = 0;
     for (let i = 0; i < cards.length - numcards + 1; i++) {
         if (i == 0) {
-            paggitems += `<circle class="button_pagination" cx="${4 + i * 25}" cy="4" r="4" fill="#2A6CEA" />`;
+            paggitems += `<circle class="button_pagination" id="${i}" cx="${4 + i * 25}" cy="4" r="4" fill="#2A6CEA" />`;
         } else {
-            paggitems += `<circle class="button_pagination" cx="${4 + i * 25}" cy="4" r="4" fill="#C2C8CD" />`;
+            paggitems += `<circle class="button_pagination" id="${i}"cx="${4 + i * 25}" cy="4" r="4" fill="#C2C8CD" />`;
         }
+        pagination_width += 30;
     }
+    paggination.attr("width", `${pagination_width}`);
     paggination.html(paggitems);
 })()
-
+let buttpag = document.querySelectorAll(".button_pagination");
+buttpag.forEach(function (Element) {
+    Element.addEventListener("click", function (event) {
+        let currcard = Element.id;
+        let firstVisible = $(".review__card:not(.hidden_card):first");
+        let indexofVisivle = $(".review__card").index(firstVisible)
+        console.log(indexofVisivle)
+        if (currcard < indexofVisivle) {
+            for (let i = 0; i < indexofVisivle - currcard; i++) {
+                swapleft();
+            }
+        } else if (currcard > indexofVisivle) {
+            for (let i = 0; i < currcard - indexofVisivle; i++) {
+                swapright();
+            }
+        }
+    })
+})
 function recolorpath() {
     if ($(".review__card:not(.hidden_card):first").nextAll(".review__card.hidden_card:first").length > 0) {
         right_path.setAttribute("fill", "#2A6CEA");
@@ -151,7 +171,7 @@ rightswap.addEventListener("click", () => {
 var answerisshowen = "<circle cx=\"12\" cy=\"12\" r=\"11\" stroke=\"#191C1F\" stroke-width=\"2\" /> <path d = \"M16.2426 14.8286L13.4142 12.0002L16.2426 9.17175C16.4302 8.98421 16.5355 8.72986 16.5355 8.46464C16.5355 8.19942 16.4302 7.94507 16.2426 7.75753C16.0551 7.57 15.8008 7.46464 15.5355 7.46464C15.2703 7.46464 15.016 7.57 14.8284 7.75753L12 10.586L9.17157 7.75753C8.98404 7.57 8.72968 7.46464 8.46447 7.46464C8.19925 7.46464 7.9449 7.57 7.75736 7.75753C7.56982 7.94507 7.46447 8.19942 7.46447 8.46464C7.46447 8.72986 7.56982 8.98421 7.75736 9.17175L10.5858 12.0002L7.75736 14.8286C7.56982 15.0161 7.46447 15.2705 7.46447 15.5357C7.46447 15.8009 7.56982 16.0553 7.75736 16.2428C7.9449 16.4304 8.19925 16.5357 8.46447 16.5357C8.72968 16.5357 8.98404 16.4304 9.17157 16.2428L12 13.4144L14.8284 16.2428C15.016 16.4304 15.2703 16.5357 15.5355 16.5357C15.8008 16.5357 16.0551 16.4304 16.2426 16.2428C16.4302 16.0553 16.5355 15.8009 16.5355 15.5357C16.5355 15.2705 16.4302 15.0161 16.2426 14.8286Z\"fill = \"#191C1F\" /> ";
 var answerisclose = "<circle cx=\"12\" cy=\"12\" r=\"11\" stroke=\"#191C1F\" stroke-width=\"2\" /> <path d=\"M17 11H13V7C13 6.73478 12.8946 6.48043 12.7071 6.29289C12.5196 6.10536 12.2652 6 12 6C11.7348 6 11.4804 6.10536 11.2929 6.29289C11.1054 6.48043 11 6.73478 11 7V11H7C6.73478 11 6.48043 11.1054 6.29289 11.2929C6.10536 11.4804 6 11.7348 6 12C6 12.2652 6.10536 12.5196 6.29289 12.7071C6.48043 12.8946 6.73478 13 7 13H11V17C11 17.2652 11.1054 17.5196 11.2929 17.7071C11.4804 17.8946 11.7348 18 12 18C12.2652 18 12.5196 17.8946 12.7071 17.7071C12.8946 17.5196 13 17.2652 13 17V13H17C17.2652 13 17.5196 12.8946 17.7071 12.7071C17.8946 12.5196 18 12.2652 18 12C18 11.7348 17.8946 11.4804 17.7071 11.2929C17.5196 11.1054 17.2652 11 17 11Z\" fill=\"#191C1F\" />"
 var showanswer = document.querySelectorAll("#questions__card_show");
-var showanswer_1 = document.querySelectorAll(".questions__cards");
+var showanswer_1 = document.querySelectorAll(".questions__card");
 showanswer_1.forEach(function (Element) {
     Element.addEventListener("click", function (event) {
         let svg = Element.querySelector('svg');
@@ -166,21 +186,6 @@ showanswer_1.forEach(function (Element) {
         }
     })
 })
-// showanswer.forEach(function (svgElement) {
-//     svgElement.addEventListener("click", function (event) {
-//         let svg = $(event.target).closest("svg");
-//         let answer = svg.parent().parent().children(".questions__card_answer");
-//         if (answer.hasClass("hidden_ans")) {
-//             answer.removeClass("hidden_ans");
-//             $(svg).html(answerisshowen);
-//         } else {
-//             answer.addClass("hidden_ans");
-//             $(svg).html(answerisclose);
-//         }
-//     })
-// });
-
-
 checkbox.addEventListener("change", function () {
     if (this.checked) {
         $(".form__buttons_label").html("Я соглашаюсь");
@@ -232,9 +237,7 @@ function validateFunc(event) {
 
 
 $(document).ready(function () {
-    // При клике на кнопку "Открыть модальное окно"
     $(".burger_menu_header").click(function () {
-        // Показываем модальное окно
         $(".header__modal").show();
     });
     $(".header__modal_cross").click(function () {
