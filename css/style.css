@@ -417,6 +417,20 @@ html {
 .questions__card {
     border-top: solid 1px #ECEFF2;
     padding: 24px 0px;
+    cursor: pointer;
+}
+
+.questions__card:hover * {
+    color: #2A6CEA;
+}
+
+.questions__card:hover #questions__card_show path {
+    /* Изменяем цвет SVG */
+    fill: #2A6CEA;
+}
+
+.questions__card:hover #questions__card_show circle {
+    stroke: #2A6CEA;
 }
 
 .questions__card_answer {
